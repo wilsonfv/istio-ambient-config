@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apps-ambient
+  labels:
+    # Ambient mode enabled at namespace level: no sidecars injected!
+    istio.io/dataplane-mode: ambient
+    # Route traffic to namespace-scoped waypoint proxy for L7 capabilities
+    istio.io/use-waypoint: namespace-waypoint

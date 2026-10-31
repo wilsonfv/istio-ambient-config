@@ -1,0 +1,10 @@
+# Helm packaged archives and subchart caches
+charts/*/charts/*.tgz
+*.tgz
+
+# OS and Editor files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.bak
