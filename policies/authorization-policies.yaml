@@ -12,6 +12,7 @@ spec:
         - source:
             principals:
               - "cluster.local/ns/apps-ambient/sa/sleep-client"
+              - "cluster.local/ns/apps-ambient/sa/namespace-waypoint"
               - "cluster.local/ns/istio-system/sa/*"
 ---
 # L7 Authorization Policy: Enforced by Waypoint Proxy at Layer 7 (HTTP methods/paths)
