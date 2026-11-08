@@ -5,19 +5,49 @@ metadata:
 data:
   policy.default: role:readonly
   policy.csv: |
-    # Disable all mutation actions on applications, clusters, repositories and projects
-    p, role:readonly, applications, create, *, deny
-    p, role:readonly, applications, update, *, deny
-    p, role:readonly, applications, delete, *, deny
-    p, role:readonly, applications, sync, *, deny
-    p, role:readonly, applications, override, *, deny
-    p, role:readonly, applications, action/*, *, deny
-    p, admin, applications, create, *, deny
-    p, admin, applications, update, *, deny
-    p, admin, applications, delete, *, deny
-    p, admin, applications, sync, *, deny
-    p, admin, applications, override, *, deny
-    p, admin, applications, action/*, *, deny
+    # Allow read-only visibility across all resources
+    p, role:readonly, applications, get, */*, allow
+    p, role:readonly, certificates, get, *, allow
+    p, role:readonly, clusters, get, *, allow
+    p, role:readonly, repositories, get, *, allow
+    p, role:readonly, projects, get, *, allow
+    p, role:readonly, accounts, get, *, allow
+    p, role:readonly, gpgkeys, get, *, allow
+    p, role:readonly, logs, get, */*, allow
+
+    # Deny all mutations on application level
+    p, role:readonly, applications, create, */*, deny
+    p, role:readonly, applications, update, */*, deny
+    p, role:readonly, applications, delete, */*, deny
+    p, role:readonly, applications, sync, */*, deny
+    p, role:readonly, applications, override, */*, deny
+    p, role:readonly, applications, action/*, */*, deny
+    p, role:readonly, exec, create, */*, deny
+
+    # Deny all mutations on all k8s resources (sub-resources: Deployment, Service, ServiceAccount, Pod, etc.)
+    p, role:readonly, applications, delete/*, */*, deny
+    p, role:readonly, applications, delete/*/*/*/*, */*, deny
+    p, role:readonly, applications, update/*, */*, deny
+    p, role:readonly, applications, update/*/*/*/*, */*, deny
+    p, role:readonly, applications, sync/*, */*, deny
+    p, role:readonly, applications, sync/*/*/*/*, */*, deny
+
+    # Admin explicit denies for applications and all k8s resources
+    p, admin, applications, create, */*, deny
+    p, admin, applications, update, */*, deny
+    p, admin, applications, update/*, */*, deny
+    p, admin, applications, update/*/*/*/*, */*, deny
+    p, admin, applications, delete, */*, deny
+    p, admin, applications, delete/*, */*, deny
+    p, admin, applications, delete/*/*/*/*, */*, deny
+    p, admin, applications, sync, */*, deny
+    p, admin, applications, sync/*, */*, deny
+    p, admin, applications, sync/*/*/*/*, */*, deny
+    p, admin, applications, override, */*, deny
+    p, admin, applications, action/*, */*, deny
+    p, admin, exec, create, */*, deny
+
+    # Admin explicit denies for clusters, repos, projects
     p, admin, clusters, create, *, deny
     p, admin, clusters, update, *, deny
     p, admin, clusters, delete, *, deny
