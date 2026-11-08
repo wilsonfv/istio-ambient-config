@@ -11,6 +11,7 @@ metadata:
   namespace: apps-ambient
   labels:
     app: echo-server
+    key1: value1
 spec:
   replicas: 2
   selector:
