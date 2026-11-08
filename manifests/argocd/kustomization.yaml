@@ -7,19 +7,18 @@ resources:
   - install.yaml
 
 patches:
-  - target:
+  - patch: |-
+      apiVersion: v1
       kind: ServiceAccount
-      name: argocd-application-controller
-    patch: |-
-      - op: add
-        path: /metadata/annotations
-        value:
+      metadata:
+        name: argocd-application-controller
+        annotations:
           iam.gke.io/gcp-service-account: argocd-cluster-manager@mq-usecase-1.iam.gserviceaccount.com
-  - target:
+  - patch: |-
+      apiVersion: v1
       kind: ServiceAccount
-      name: argocd-server
-    patch: |-
-      - op: add
-        path: /metadata/annotations
-        value:
+      metadata:
+        name: argocd-server
+        annotations:
           iam.gke.io/gcp-service-account: argocd-cluster-manager@mq-usecase-1.iam.gserviceaccount.com
+  - path: argocd-rbac-cm-patch.yaml

@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+data:
+  policy.default: role:readonly
+  policy.csv: |
+    # Disable all mutation actions on applications, clusters, repositories and projects
+    p, role:readonly, applications, create, *, deny
+    p, role:readonly, applications, update, *, deny
+    p, role:readonly, applications, delete, *, deny
+    p, role:readonly, applications, sync, *, deny
+    p, role:readonly, applications, override, *, deny
+    p, role:readonly, applications, action/*, *, deny
+    p, admin, applications, create, *, deny
+    p, admin, applications, update, *, deny
+    p, admin, applications, delete, *, deny
+    p, admin, applications, sync, *, deny
+    p, admin, applications, override, *, deny
+    p, admin, applications, action/*, *, deny
+    p, admin, clusters, create, *, deny
+    p, admin, clusters, update, *, deny
+    p, admin, clusters, delete, *, deny
+    p, admin, repositories, create, *, deny
+    p, admin, repositories, update, *, deny
+    p, admin, repositories, delete, *, deny
+    p, admin, projects, create, *, deny
+    p, admin, projects, update, *, deny
+    p, admin, projects, delete, *, deny
