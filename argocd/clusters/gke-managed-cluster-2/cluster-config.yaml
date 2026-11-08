@@ -6,6 +6,7 @@ metadata:
 data:
   cluster-name: "gke-managed-cluster-2"
   cluster-role: "managed"
-  vpc-network: "mq-usecase-1-internal-vpc2"
-  subnet: "internal-vpc2-europe-west1-gke"
-  network: "network2"
+  gcp-project: "mq-usecase-2"
+  vpc-network: "mq-usecase-2-internal-vpc1"
+  subnet: "internal-vpc1-europe-west1-gke2"
+  network: "network1"
