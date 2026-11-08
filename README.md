@@ -69,13 +69,18 @@ Istio Ambient Mode delivers a transparent, sidecarless service mesh architecture
 │   └── clusters/                      # Dedicated cluster overlays
 │       ├── argocd-control-plane/      # Control Plane cluster configuration
 │       │   ├── kustomization.yaml
-│       │   └── cluster-config.yaml
+│       │   ├── cluster-config.yaml
+│       │   └── 05-argocd.yaml         # Self-managing Argo CD Application on control plane
 │       ├── gke-managed-cluster/       # Managed cluster 1 configuration
 │       │   ├── kustomization.yaml
 │       │   └── cluster-config.yaml
 │       └── gke-managed-cluster-2/     # Managed cluster 2 configuration
 │           ├── kustomization.yaml
 │           └── cluster-config.yaml
+├── manifests/                         # Declarative platform manifests
+│   └── argocd/                        # Argo CD control plane Kustomize manifests
+│       ├── kustomization.yaml         # Injects Workload Identity annotations
+│       └── install.yaml               # Upstream Argo CD install manifests
 ├── charts/                            # Helm wrapper charts with upstream dependencies
 │   ├── istio-base/                    # Upstream base chart + values
 │   ├── istio-cni/                     # Upstream CNI chart + GKE values

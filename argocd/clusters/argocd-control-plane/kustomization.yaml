@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ../../base
   - cluster-config.yaml
+  - 05-argocd.yaml
 
 nameSuffix: -cp
 

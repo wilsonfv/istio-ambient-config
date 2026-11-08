@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: argocd
+
+resources:
+  - install.yaml
+
+patches:
+  - target:
+      kind: ServiceAccount
+      name: argocd-application-controller
+    patch: |-
+      - op: add
+        path: /metadata/annotations
+        value:
+          iam.gke.io/gcp-service-account: argocd-cluster-manager@mq-usecase-1.iam.gserviceaccount.com
+  - target:
+      kind: ServiceAccount
+      name: argocd-server
+    patch: |-
+      - op: add
+        path: /metadata/annotations
+        value:
+          iam.gke.io/gcp-service-account: argocd-cluster-manager@mq-usecase-1.iam.gserviceaccount.com
