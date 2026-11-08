@@ -92,9 +92,6 @@ Istio Ambient Mode delivers a transparent, sidecarless service mesh architecture
 │   ├── echo-server.yaml               # Target microservice
 │   ├── sleep-client.yaml              # Testing client
 │   └── waypoint-gateway.yaml          # L7 Waypoint Gateway (istio-waypoint)
-└── scripts/
-    ├── configure-argocd-repo.sh       # Registers this private GitHub repo in Argo CD
-    └── sync-ambient.sh                # End-to-end sync automation for GKE
 ```
 
 ---
@@ -103,16 +100,6 @@ Istio Ambient Mode delivers a transparent, sidecarless service mesh architecture
 
 Because this repository is **private**, Argo CD requires credentials to pull chart definitions and manifests.
 
-### Method 1: Automated Script (Recommended)
-```bash
-./scripts/configure-argocd-repo.sh --token <GITHUB_PAT_TOKEN>
-```
-If your local git environment already has the token configured in the remote URL, the script detects it automatically:
-```bash
-./scripts/configure-argocd-repo.sh
-```
-
-### Method 2: Declarative Kubernetes Secret
 Apply the following secret to the `argocd` namespace:
 
 ```yaml
@@ -127,7 +114,7 @@ type: Opaque
 stringData:
   type: git
   url: https://github.com/wilsonfv/istio-ambient-config.git
-  username: wilsonfv
+  username: oauth2
   password: <GITHUB_PAT_TOKEN>
 ```
 
@@ -135,25 +122,17 @@ stringData:
 
 ## 4. Deploying & Syncing to GKE via Argo CD
 
-### Step 1: Connect to your GKE Cluster
+Multi-cluster automation and lifecycle are driven by the platform repository:
+👉 [**github.com/wilsonfv/argocd-crossplane-gcp**](https://github.com/wilsonfv/argocd-crossplane-gcp)
+
+To deploy across all clusters directly using the platform automation:
 ```bash
-gcloud container clusters get-credentials <CLUSTER_NAME> --region <REGION> --project <PROJECT_ID>
+./deploy-istio-ambient.sh
 ```
 
-### Step 2: Configure Argo CD Access
-```bash
-./scripts/configure-argocd-repo.sh
-```
-
-### Step 3: Apply the App-of-Apps
-Deploy the root application which continuously reconciles all components in order of their sync waves:
+Or apply the declarative parent App-of-Apps manifest directly to the Argo CD control plane:
 ```bash
 kubectl apply -f argocd/app-of-apps.yaml
-```
-
-Alternatively, run the all-in-one sync script:
-```bash
-./scripts/sync-ambient.sh --project <PROJECT_ID> --cluster <CLUSTER_NAME> --region <REGION>
 ```
 
 ---
