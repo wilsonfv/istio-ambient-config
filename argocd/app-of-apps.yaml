@@ -34,7 +34,7 @@ spec:
   source:
     repoURL: https://github.com/wilsonfv/istio-ambient-config.git
     targetRevision: HEAD
-    path: argocd/clusters/gke-managed-cluster-1
+    path: argocd/clusters/gke-managed-cluster
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

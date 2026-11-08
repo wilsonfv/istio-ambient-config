@@ -56,15 +56,26 @@ Istio Ambient Mode delivers a transparent, sidecarless service mesh architecture
 ```text
 .
 ├── argocd/
-│   ├── app-of-apps.yaml               # Root Application deploying the entire ambient mesh
+│   ├── app-of-apps.yaml               # Parent root application reconciling all clusters
 │   ├── repo-secret.template.yaml      # Secret template for Argo CD private Git authentication
-│   └── apps/                          # Declarative Argo CD Applications by sync wave
-│       ├── 00-istio-base.yaml         # Wave 0: Istio Base CRDs & cluster roles
-│       ├── 01-istio-cni.yaml          # Wave 1: Istio CNI DaemonSet (GKE paths)
-│       ├── 01-istiod.yaml             # Wave 1: Istiod Ambient Control Plane
-│       ├── 02-istio-ztunnel.yaml      # Wave 2: Istio Ztunnel DaemonSet (L4 node proxy)
-│       ├── 03-istio-policies.yaml     # Wave 3: Strict mTLS, L4 & L7 Authorization Policies
-│       └── 04-ambient-samples.yaml    # Wave 4: Sample workloads & Waypoint proxy
+│   ├── base/                          # Shared base Argo CD application manifests
+│   │   ├── kustomization.yaml
+│   │   ├── 00-istio-base.yaml         # Wave 0: Base CRDs & RBAC
+│   │   ├── 01-istio-cni.yaml          # Wave 1: CNI DaemonSet
+│   │   ├── 01-istiod.yaml             # Wave 1: Istiod Control Plane
+│   │   ├── 02-istio-ztunnel.yaml      # Wave 2: Ztunnel L4 Node Proxy
+│   │   ├── 03-istio-policies.yaml     # Wave 3: STRICT mTLS & Auth Policies
+│   │   └── 04-ambient-samples.yaml    # Wave 4: apps-ambient sample workloads & waypoint
+│   └── clusters/                      # Dedicated cluster overlays
+│       ├── argocd-control-plane/      # Control Plane cluster configuration
+│       │   ├── kustomization.yaml
+│       │   └── cluster-config.yaml
+│       ├── gke-managed-cluster/       # Managed cluster 1 configuration
+│       │   ├── kustomization.yaml
+│       │   └── cluster-config.yaml
+│       └── gke-managed-cluster-2/     # Managed cluster 2 configuration
+│           ├── kustomization.yaml
+│           └── cluster-config.yaml
 ├── charts/                            # Helm wrapper charts with upstream dependencies
 │   ├── istio-base/                    # Upstream base chart + values
 │   ├── istio-cni/                     # Upstream CNI chart + GKE values
@@ -72,11 +83,12 @@ Istio Ambient Mode delivers a transparent, sidecarless service mesh architecture
 │   ├── istio-ztunnel/                 # Upstream ztunnel chart + values
 │   └── istio-waypoint/                # Upstream gateway chart for L7 Waypoint
 ├── policies/                          # Mesh Security Policies (Kustomize)
+│   ├── namespace.yaml                 # istio-system namespace
+│   ├── apps-ambient-namespace.yaml    # apps-ambient namespace with ambient label
 │   ├── peer-authentication.yaml       # Mesh-wide STRICT mutual TLS
 │   ├── authorization-policies.yaml    # L4 and L7 Authorization policies
 │   └── telemetry.yaml                 # Access logging and Prometheus metrics
 ├── samples/                           # Verification Workloads (Kustomize)
-│   ├── namespace.yaml                 # Namespace enrolled with istio.io/dataplane-mode: ambient
 │   ├── echo-server.yaml               # Target microservice
 │   ├── sleep-client.yaml              # Testing client
 │   └── waypoint-gateway.yaml          # L7 Waypoint Gateway (istio-waypoint)
