@@ -5,7 +5,7 @@ resources:
   - ../../base
   - cluster-config.yaml
 
-nameSuffix: -vpc2-1
+nameSuffix: -managed-4
 
 patches:
   - target:
@@ -13,4 +13,4 @@ patches:
     patch: |-
       - op: replace
         path: /spec/destination/name
-        value: gke-managed-vpc2-1
+        value: gke-managed-cluster-4
